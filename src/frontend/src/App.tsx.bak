@@ -523,7 +523,7 @@ function SparkleParticle({
       >
         <path
           d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z"
-          fill="oklch(0.78 0.14 85 / 0.45)"
+          fill="oklch(0.72 0.18 355 / 0.5)"
         />
       </svg>
     </div>
@@ -583,7 +583,7 @@ function ReasonsSection({
       className="w-full py-20 px-4"
       style={{
         background:
-          "linear-gradient(180deg, oklch(0.09 0.03 265) 0%, oklch(0.13 0.05 275) 50%, oklch(0.10 0.03 260) 100%)",
+          "linear-gradient(180deg, oklch(0.93 0.06 350) 0%, oklch(0.96 0.05 320) 40%, oklch(0.94 0.06 360) 100%)",
       }}
       data-ocid="reasons5k.section"
     >
@@ -599,13 +599,13 @@ function ReasonsSection({
           <div className="text-5xl mb-4">💕</div>
           <h2
             className="font-script text-5xl md:text-7xl leading-tight mb-4"
-            style={{ color: "oklch(0.82 0.14 85)" }}
+            style={{ color: "oklch(0.42 0.22 10)" }}
           >
             5,000 Reasons I Love You
           </h2>
           <p
             className="font-body text-lg md:text-xl max-w-xl mx-auto"
-            style={{ color: "oklch(0.72 0.06 80)" }}
+            style={{ color: "oklch(0.48 0.14 330)" }}
           >
             Even without meeting you, here are all the reasons my heart chose
             you, Merin 💕
@@ -633,9 +633,9 @@ function ReasonsSection({
             }}
             className="pl-10 py-3 rounded-2xl font-body text-base shadow-sm"
             style={{
-              background: "oklch(0.16 0.05 265)",
-              border: "1.5px solid oklch(0.30 0.08 265)",
-              color: "oklch(0.88 0.04 80)",
+              background: "oklch(1 0 0 / 0.85)",
+              border: "1.5px solid oklch(0.78 0.12 340)",
+              color: "oklch(0.3 0.1 340)",
             }}
             data-ocid="reasons5k.search_input"
           />
@@ -648,7 +648,7 @@ function ReasonsSection({
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
           className="font-body text-sm text-center mb-8"
-          style={{ color: "oklch(0.65 0.05 265)" }}
+          style={{ color: "oklch(0.55 0.12 330)" }}
           data-ocid="reasons5k.panel"
         >
           Showing <strong>{visibleReasons.length}</strong> of{" "}
@@ -676,11 +676,11 @@ function ReasonsSection({
                 style={{
                   background:
                     idx % 3 === 0
-                      ? "oklch(0.16 0.05 265 / 0.90)"
+                      ? "oklch(1 0 0 / 0.82)"
                       : idx % 3 === 1
-                        ? "oklch(0.18 0.06 275 / 0.90)"
-                        : "oklch(0.17 0.06 285 / 0.90)",
-                  boxShadow: "0 2px 12px oklch(0.10 0.04 265 / 0.60)",
+                        ? "oklch(0.98 0.04 355 / 0.9)"
+                        : "oklch(0.97 0.04 305 / 0.85)",
+                  boxShadow: "0 2px 8px oklch(0.65 0.12 340 / 0.12)",
                   backdropFilter: "blur(8px)",
                 }}
                 data-ocid={`reasons5k.item.${Math.min(idx + 1, 3)}`}
@@ -689,7 +689,7 @@ function ReasonsSection({
                   className="font-display text-xs font-bold shrink-0 mt-0.5 px-2 py-0.5 rounded-full"
                   style={{
                     background:
-                      "linear-gradient(135deg, oklch(0.72 0.16 85), oklch(0.65 0.14 70))",
+                      "linear-gradient(135deg, oklch(0.62 0.2 10), oklch(0.68 0.18 340))",
                     color: "white",
                     minWidth: "42px",
                     textAlign: "center",
@@ -699,7 +699,7 @@ function ReasonsSection({
                 </span>
                 <p
                   className="font-body text-sm leading-relaxed"
-                  style={{ color: "oklch(0.88 0.04 80)" }}
+                  style={{ color: "oklch(0.32 0.1 340)" }}
                 >
                   {reason}
                 </p>
@@ -714,7 +714,7 @@ function ReasonsSection({
             <div className="text-5xl mb-4">🌸</div>
             <p
               className="font-body text-lg"
-              style={{ color: "oklch(0.65 0.05 265)" }}
+              style={{ color: "oklch(0.55 0.12 330)" }}
             >
               No reasons found for "{search}" — but trust me, they all still
               apply! 💖
@@ -734,7 +734,7 @@ function ReasonsSection({
               className="font-body font-semibold text-base text-white px-8 py-4 rounded-2xl shadow-lg transition-transform hover:scale-105 active:scale-95"
               style={{
                 background:
-                  "linear-gradient(135deg, oklch(0.72 0.16 85), oklch(0.78 0.13 65))",
+                  "linear-gradient(135deg, oklch(0.55 0.22 10), oklch(0.62 0.18 355))",
               }}
               onClick={() => setPage((p) => p + 1)}
               data-ocid="reasons5k.button"
@@ -743,7 +743,7 @@ function ReasonsSection({
             </button>
             <p
               className="font-body text-xs mt-3"
-              style={{ color: "oklch(0.65 0.05 265)" }}
+              style={{ color: "oklch(0.6 0.1 330)" }}
             >
               {filtered.length - visibleReasons.length} more to explore
             </p>
@@ -756,13 +756,13 @@ function ReasonsSection({
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             className="mt-10 text-center py-8 rounded-3xl"
-            style={{ background: "oklch(0.15 0.05 265 / 0.80)" }}
+            style={{ background: "oklch(1 0 0 / 0.6)" }}
             data-ocid="reasons5k.success_state"
           >
             <div className="text-4xl mb-3">💖</div>
             <p
               className="font-script text-2xl"
-              style={{ color: "oklch(0.82 0.14 85)" }}
+              style={{ color: "oklch(0.42 0.22 10)" }}
             >
               {search
                 ? `All ${filtered.length} matching reasons ✨`
@@ -770,7 +770,7 @@ function ReasonsSection({
             </p>
             <p
               className="font-body text-sm mt-2"
-              style={{ color: "oklch(0.65 0.05 265)" }}
+              style={{ color: "oklch(0.58 0.1 330)" }}
             >
               I love you, Merin. Always. 🌸
             </p>
@@ -857,7 +857,7 @@ export default function App() {
       className="min-h-screen sparkle-bg"
       style={{
         background:
-          "linear-gradient(135deg, oklch(0.08 0.03 265) 0%, oklch(0.12 0.05 275) 50%, oklch(0.09 0.04 260) 100%)",
+          "linear-gradient(135deg, oklch(0.96 0.04 340) 0%, oklch(0.92 0.06 305) 40%, oklch(0.95 0.05 355) 100%)",
       }}
     >
       {/* Background sparkles */}
@@ -888,7 +888,7 @@ export default function App() {
           </div>
           <h1
             className="font-script text-6xl md:text-8xl leading-tight mb-3"
-            style={{ color: "oklch(0.88 0.12 80)" }}
+            style={{ color: "oklch(0.48 0.22 10)" }}
           >
             I Love You,
           </h1>
@@ -897,7 +897,7 @@ export default function App() {
           </h2>
           <p
             className="mt-5 font-body text-lg md:text-xl"
-            style={{ color: "oklch(0.75 0.06 80)" }}
+            style={{ color: "oklch(0.52 0.1 330)" }}
           >
             A little something made just for you 🌸
           </p>
@@ -915,8 +915,8 @@ export default function App() {
               className="font-body font-semibold text-base text-white px-8 py-3 rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95 inline-flex items-center gap-2"
               style={{
                 background:
-                  "linear-gradient(135deg, oklch(0.72 0.16 85), oklch(0.78 0.13 70))",
-                boxShadow: "0 4px 24px oklch(0.78 0.14 85 / 0.40)",
+                  "linear-gradient(135deg, oklch(0.55 0.22 10), oklch(0.62 0.18 340))",
+                boxShadow: "0 4px 20px oklch(0.55 0.22 10 / 0.35)",
               }}
               data-ocid="hero.primary_button"
             >
@@ -935,7 +935,7 @@ export default function App() {
             <span
               className="font-body text-sm px-4 py-2 rounded-full"
               style={{
-                background: "oklch(0.78 0.14 85 / 0.15)",
+                background: "oklch(0.55 0.22 10 / 0.12)",
                 color: "oklch(0.45 0.2 10)",
               }}
             >
@@ -954,14 +954,14 @@ export default function App() {
           transition={{ delay: 0.2 }}
           className="rounded-3xl p-7 shadow-card"
           style={{
-            background: "oklch(0.15 0.05 265 / 0.85)",
+            background: "oklch(1 0 0 / 0.75)",
             backdropFilter: "blur(12px)",
           }}
           data-ocid="love_amount.card"
         >
           <p
             className="font-display text-sm uppercase tracking-widest mb-4"
-            style={{ color: "oklch(0.70 0.12 290)" }}
+            style={{ color: "oklch(0.65 0.1 305)" }}
           >
             Ask me anything 💬
           </p>
@@ -970,7 +970,7 @@ export default function App() {
             className="btn-love w-full py-4 px-6 rounded-2xl font-body font-semibold text-lg text-white shadow-love animate-pulse-glow"
             style={{
               background:
-                "linear-gradient(135deg, oklch(0.72 0.16 85), oklch(0.80 0.12 70))",
+                "linear-gradient(135deg, oklch(0.55 0.22 10), oklch(0.62 0.2 355))",
             }}
             onClick={handleLoveClick}
             data-ocid="love_amount.button"
@@ -987,18 +987,18 @@ export default function App() {
                 exit={{ opacity: 0, y: -10, scale: 0.95 }}
                 transition={{ duration: 0.35 }}
                 className="mt-5 rounded-2xl py-5 px-6 text-center"
-                style={{ background: "oklch(0.18 0.06 280)" }}
+                style={{ background: "oklch(0.97 0.04 355)" }}
                 data-ocid="love_amount.success_state"
               >
                 <p
                   className="font-display text-2xl font-bold"
-                  style={{ color: "oklch(0.82 0.14 85)" }}
+                  style={{ color: "oklch(0.45 0.22 10)" }}
                 >
                   {LOVE_ANSWERS[loveIdx]}
                 </p>
                 <p
                   className="text-xs mt-1"
-                  style={{ color: "oklch(0.60 0.05 265)" }}
+                  style={{ color: "oklch(0.6 0.08 330)" }}
                 >
                   click again for more ↑
                 </p>
@@ -1014,14 +1014,14 @@ export default function App() {
           transition={{ delay: 0.35 }}
           className="rounded-3xl p-7 shadow-card"
           style={{
-            background: "oklch(0.15 0.05 265 / 0.85)",
+            background: "oklch(1 0 0 / 0.75)",
             backdropFilter: "blur(12px)",
           }}
           data-ocid="send_heart.card"
         >
           <p
             className="font-display text-sm uppercase tracking-widest mb-4"
-            style={{ color: "oklch(0.70 0.12 290)" }}
+            style={{ color: "oklch(0.65 0.1 305)" }}
           >
             For you 💌
           </p>
@@ -1030,7 +1030,7 @@ export default function App() {
             className="btn-love w-full py-4 px-6 rounded-2xl font-body font-semibold text-lg text-white shadow-glow"
             style={{
               background:
-                "linear-gradient(135deg, oklch(0.50 0.18 290), oklch(0.60 0.18 0))",
+                "linear-gradient(135deg, oklch(0.62 0.16 305), oklch(0.68 0.18 340))",
             }}
             onClick={handleSendHeart}
             data-ocid="send_heart.button"
@@ -1039,7 +1039,7 @@ export default function App() {
           </button>
           <p
             className="text-center text-xs mt-3"
-            style={{ color: "oklch(0.60 0.05 265)" }}
+            style={{ color: "oklch(0.62 0.08 305)" }}
           >
             Watch the hearts fly! 🎈
           </p>
@@ -1052,14 +1052,14 @@ export default function App() {
           transition={{ delay: 0.5 }}
           className="rounded-3xl p-7 shadow-card"
           style={{
-            background: "oklch(0.15 0.05 265 / 0.85)",
+            background: "oklch(1 0 0 / 0.75)",
             backdropFilter: "blur(12px)",
           }}
           data-ocid="love_reason.card"
         >
           <p
             className="font-display text-sm uppercase tracking-widest mb-4"
-            style={{ color: "oklch(0.70 0.12 290)" }}
+            style={{ color: "oklch(0.65 0.1 305)" }}
           >
             Reasons 🌷
           </p>
@@ -1068,7 +1068,7 @@ export default function App() {
             className="btn-love w-full py-4 px-6 rounded-2xl font-body font-semibold text-lg text-white"
             style={{
               background:
-                "linear-gradient(135deg, oklch(0.45 0.14 290), oklch(0.72 0.16 85))",
+                "linear-gradient(135deg, oklch(0.68 0.14 305), oklch(0.55 0.22 10))",
             }}
             onClick={handleReasonClick}
             data-ocid="love_reason.button"
@@ -1085,18 +1085,18 @@ export default function App() {
                 exit={{ opacity: 0, scale: 0.85 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 className="mt-5 rounded-2xl py-5 px-6 text-center"
-                style={{ background: "oklch(0.18 0.06 280)" }}
+                style={{ background: "oklch(0.95 0.05 305)" }}
                 data-ocid="love_reason.success_state"
               >
                 <p
                   className="font-body text-xl font-semibold"
-                  style={{ color: "oklch(0.88 0.08 80)" }}
+                  style={{ color: "oklch(0.38 0.16 305)" }}
                 >
                   {LOVE_REASONS[reasonIdx]}
                 </p>
                 <p
                   className="text-xs mt-1"
-                  style={{ color: "oklch(0.60 0.08 290)" }}
+                  style={{ color: "oklch(0.58 0.08 305)" }}
                 >
                   click for more reasons ↑
                 </p>
@@ -1112,14 +1112,14 @@ export default function App() {
           transition={{ delay: 0.65 }}
           className="rounded-3xl p-7 shadow-card"
           style={{
-            background: "oklch(0.15 0.05 265 / 0.85)",
+            background: "oklch(1 0 0 / 0.75)",
             backdropFilter: "blur(12px)",
           }}
           data-ocid="our_song.card"
         >
           <p
             className="font-display text-sm uppercase tracking-widest mb-4"
-            style={{ color: "oklch(0.70 0.12 290)" }}
+            style={{ color: "oklch(0.65 0.1 305)" }}
           >
             Feel the music 🎵
           </p>
@@ -1128,8 +1128,8 @@ export default function App() {
             className="btn-love w-full py-4 px-6 rounded-2xl font-body font-semibold text-lg text-white"
             style={{
               background: songClicked
-                ? "linear-gradient(135deg, oklch(0.72 0.16 85), oklch(0.80 0.12 70))"
-                : "linear-gradient(135deg, oklch(0.55 0.18 0), oklch(0.45 0.14 320))",
+                ? "linear-gradient(135deg, oklch(0.55 0.22 10), oklch(0.62 0.2 355))"
+                : "linear-gradient(135deg, oklch(0.48 0.18 355), oklch(0.58 0.14 320))",
             }}
             onClick={handleSongClick}
             data-ocid="our_song.button"
@@ -1144,19 +1144,19 @@ export default function App() {
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 className="mt-5 rounded-2xl py-5 px-6 text-center overflow-hidden"
-                style={{ background: "oklch(0.18 0.06 280)" }}
+                style={{ background: "oklch(0.97 0.04 340)" }}
                 data-ocid="our_song.success_state"
               >
                 <div className="text-3xl mb-2">🎶</div>
                 <p
                   className="font-script text-2xl"
-                  style={{ color: "oklch(0.82 0.14 85)" }}
+                  style={{ color: "oklch(0.45 0.22 10)" }}
                 >
                   Every song reminds me of you
                 </p>
                 <p
                   className="font-body text-sm mt-2"
-                  style={{ color: "oklch(0.65 0.05 265)" }}
+                  style={{ color: "oklch(0.55 0.1 330)" }}
                 >
                   You&apos;re the melody I never want to stop hearing 💕
                 </p>
@@ -1196,7 +1196,7 @@ export default function App() {
             </motion.span>
             <span
               className="font-body text-sm"
-              style={{ color: "oklch(0.70 0.10 80)" }}
+              style={{ color: "oklch(0.55 0.14 340)" }}
             >
               tap me!
             </span>
@@ -1211,7 +1211,7 @@ export default function App() {
           className="rounded-3xl p-8 shadow-love text-center"
           style={{
             background:
-              "linear-gradient(135deg, oklch(0.22 0.08 265), oklch(0.30 0.12 290), oklch(0.78 0.14 85 / 0.3))",
+              "linear-gradient(135deg, oklch(0.55 0.22 10), oklch(0.6 0.18 355), oklch(0.62 0.14 305))",
           }}
           data-ocid="love_letter.card"
         >
@@ -1242,7 +1242,7 @@ export default function App() {
       <footer className="py-6 text-center">
         <p
           className="font-body text-sm"
-          style={{ color: "oklch(0.65 0.05 265)" }}
+          style={{ color: "oklch(0.6 0.1 330)" }}
         >
           Made with ❤️ by Sherry · {new Date().getFullYear()} ·{" "}
           <a
