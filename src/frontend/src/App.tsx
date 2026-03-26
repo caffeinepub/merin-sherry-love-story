@@ -1,1257 +1,371 @@
-import { Input } from "@/components/ui/input";
-import { AnimatePresence, motion } from "motion/react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { reasons } from "./data/reasons";
 
-// ── Types ─────────────────────────────────────────────────────────────────
-interface FloatingHeart {
-  id: number;
-  x: number;
-  size: number;
-  dur: number;
-  delay: number;
-  tx: number;
-  emoji: string;
-}
+const INITIAL_BATCH = 200;
+const BATCH_SIZE = 200;
 
-// ── Data ──────────────────────────────────────────────────────────────────
-const LOVE_ANSWERS = [
-  "To the moon 🌙",
-  "To the stars ✨",
-  "To infinity and beyond 🚀",
-  "More than pizza 🍕 (yes, really)",
-  "More than words can ever say 💖",
-  "More than all the songs ever written 🎶",
-  "More than the ocean is deep 🌊",
-  "Endlessly, hopelessly, completely 💗",
-];
+const FLORAL_ANGLES = [0, 45, 90, 135, 180, 225, 270, 315];
 
-const LOVE_REASONS = [
-  "Your smile that lights up every room ☀️",
-  "Your laugh — it's my favourite sound 🎵",
-  "The way you make me feel safe 🏡",
-  "How kind and caring you are 🌸",
-  "Your warm hugs that feel like home 🤗",
-  "The way your eyes crinkle when you're happy 👀",
-  "How you always know what to say 💬",
-  "Everything about you, honestly 💝",
-];
-
-const HEART_EMOJIS = ["💖", "💗", "💓", "💕", "💞", "🌸", "✨", "💝"];
-
-// ── 5000 Reasons Generator ─────────────────────────────────────────────────
-function generateReasons(): string[] {
-  const reasons: string[] = [];
-
-  // Category 1: His personality
-  const personalityAdjectives = [
-    "kind",
-    "gentle",
-    "funny",
-    "sweet",
-    "caring",
-    "thoughtful",
-    "genuine",
-    "warm",
-    "honest",
-    "patient",
-    "creative",
-    "intelligent",
-    "playful",
-    "charming",
-    "tender",
-    "sincere",
-    "loyal",
-    "brave",
-    "humble",
-    "cheerful",
-    "witty",
-    "magnetic",
-    "wonderful",
-    "remarkable",
-    "precious",
-    "special",
-    "authentic",
-    "real",
-    "pure-hearted",
-    "golden-souled",
-  ];
-  const personalityTemplates = [
-    (a: string) => `I love how you're always so ${a} 💖`,
-    (a: string) => `The way you're genuinely ${a} melts my heart completely`,
-    (a: string) => `You being ${a} is one of my favourite things about you 🌸`,
-    (a: string) =>
-      `How ${a} you are every single day makes me fall harder, Merin`,
-    (a: string) => `Your ${a} nature is something I treasure beyond words 💕`,
-    (a: string) => `I adore everything about how ${a} you truly are`,
-    (a: string) =>
-      `Being ${a} comes so naturally to you and I love that so much 💗`,
-    (a: string) => `The world is better because you're in it, being so ${a}`,
-  ];
-  for (const adj of personalityAdjectives) {
-    for (const tmpl of personalityTemplates) {
-      reasons.push(tmpl(adj));
-    }
-  }
-
-  // Category 2: The way he texts/chats
-  const textThings = [
-    "you send me good morning messages",
-    "you check in on me during the day",
-    "you use my name when you text",
-    "you remember the little things I tell you",
-    "you never leave me on read",
-    "you text back even when you're busy",
-    "you know exactly what to say to make me smile",
-    "you share random things that made you think of me",
-    "you send voice messages and I love hearing your voice",
-    "you tell me about your day like I'm already part of it",
-    "you hype me up in the sweetest ways",
-    "you make every conversation feel like home",
-    "you laugh at my jokes even the bad ones",
-    "you notice when I seem off and ask if I'm okay",
-    "you write the most beautiful things to me",
-    "you're honest about how you feel without making it weird",
-    "you make late-night chats feel like adventures",
-    "you send memes that are weirdly perfect for us",
-    "you never make me feel needy for wanting to talk",
-    "you turn ordinary moments into memories",
-    "you always end our conversations with so much warmth",
-    "you remember my favourite things and bring them up naturally",
-    "you send long texts when I need them most",
-    "you use emojis that feel like little digital hugs",
-    "you always make me feel seen and understood",
-  ];
-  const textTemplates = [
-    (t: string) => `I love how ${t} 💬`,
-    (t: string) => `The fact that ${t} means everything to me 💖`,
-    (t: string) => `It makes my whole day when ${t} 🌸`,
-    (t: string) => `One of my favourite things: ${t} 💕`,
-    (t: string) => `My heart does a little flip because ${t} ✨`,
-    (t: string) => `I treasure the way ${t} 💗`,
-  ];
-  for (const thing of textThings) {
-    for (const tmpl of textTemplates) {
-      reasons.push(tmpl(thing));
-    }
-  }
-
-  // Category 3: Online connection moments
-  const onlineMoments = [
-    "our late night calls that stretch past midnight",
-    "the way you stay on call even when neither of us is talking",
-    "those voice notes that make me feel like you're right here",
-    "the memes you send that are perfectly us",
-    "every playlist you've shared with me",
-    "the way our time zones don't stop us",
-    "staying up late just to be awake at the same time as you",
-    "every screenshot of our chats I've saved",
-    "the way video calls with you feel like visiting a whole other world",
-    "how we built an entire universe through a screen",
-    "those moments of comfortable silence on call",
-    "laughing together through a camera and it feeling real",
-    "the way you say goodnight like you really mean it",
-    "inside jokes we made up without even meeting",
-    "all the virtual dates that feel like real ones",
-    "every song you ever sent me with a little note attached",
-    "when you said things that changed how I see everything",
-    "the moment I realised I was falling for you between two messages",
-    "how you made me feel chosen even from thousands of miles away",
-    "all the times we stayed connected despite distance and time",
-  ];
-  const momentTemplates = [
-    (m: string) => `I will never forget ${m} 💖`,
-    (m: string) =>
-      `${m[0].toUpperCase() + m.slice(1)} — that's what real love looks like to me 🌸`,
-    (m: string) => `My favourite memory is ${m} 💕`,
-    (m: string) => `I love us for ${m} 💗`,
-    (m: string) => `Thank you for ${m}, Merin ✨`,
-    (m: string) => `I replay ${m} in my mind and smile every time 💖`,
-    (m: string) =>
-      `${m[0].toUpperCase() + m.slice(1)} is proof that distance means nothing 💝`,
-  ];
-  for (const moment of onlineMoments) {
-    for (const tmpl of momentTemplates) {
-      reasons.push(tmpl(moment));
-    }
-  }
-
-  // Category 4: Things she imagines about meeting him
-  const imagineThings = [
-    "your laugh sounds even better in person",
-    "your hugs will feel like finally arriving home",
-    "seeing you smile for the first time in real life",
-    "the first time I'll hear your voice without a screen between us",
-    "walking beside you and feeling the world shift",
-    "cooking something together in a tiny kitchen",
-    "watching you talk about something you love and seeing your eyes light up",
-    "the first moment our eyes meet across a room",
-    "sharing a meal and it tasting better just because you're there",
-    "falling asleep knowing you're actually nearby",
-    "you reaching for my hand without thinking",
-    "laughing so hard in person that we can't breathe",
-    "dancing with you even if neither of us can dance",
-    "the quiet mornings we'll share with coffee and no rush",
-    "going to places we talked about during late night calls",
-    "introducing you to the people I love and watching you charm them all",
-    "that moment the airport doors open and I see your face",
-    "the first photo we take together in real life",
-    "you being even more wonderful than I imagined",
-    "the way everything will feel different once we've hugged once",
-  ];
-  const imagineTemplates = [
-    (i: string) => `I can already imagine ${i} 🌸`,
-    (i: string) => `I dream about ${i} more than you know 💖`,
-    (i: string) => `I keep thinking about ${i} and my heart races 💕`,
-    (i: string) => `One day I'll get to experience ${i} and I can't wait ✨`,
-    (i: string) =>
-      `${i[0].toUpperCase() + i.slice(1)} — I hold onto that thought on hard days 💗`,
-    (i: string) => `The idea of ${i} makes everything worth it, Merin 💝`,
-    (i: string) => `I live for the future where ${i} 💖`,
-  ];
-  for (const img of imagineThings) {
-    for (const tmpl of imagineTemplates) {
-      reasons.push(tmpl(img));
-    }
-  }
-
-  // Category 5: Dreams of the future together
-  const futureDreams = [
-    "a home full of warmth and your laughter",
-    "road trips with no destination just each other",
-    "building something beautiful together from scratch",
-    "Sunday mornings slow and unhurried with you",
-    "growing into better people side by side",
-    "a life where I get to love you every single day",
-    "celebrating every little win with you by my side",
-    "getting through hard times together and coming out stronger",
-    "making memories that no camera could ever fully capture",
-    "the version of us that's been through everything and still chooses each other",
-    "holidays that feel magical just because you're in them",
-    "being each other's safe place for the rest of our lives",
-    "building traditions that are just ours",
-    "a love story that people talk about with warmth",
-    "waking up next to you every morning and never taking it for granted",
-    "growing old together and still laughing at the same things",
-    "adventures we haven't even thought of yet",
-    "a future where every hard thing led us here",
-    "becoming a family in whatever shape that takes",
-    "a life where I get to say 'this is Merin, my person'",
-  ];
-  const futureTemplates = [
-    (f: string) => `I dream of ${f} 💖`,
-    (f: string) => `More than anything I want ${f} with you 🌸`,
-    (f: string) => `The future I want most has ${f} in it 💕`,
-    (f: string) => `I choose ${f} every single day ✨`,
-    (f: string) =>
-      `${f[0].toUpperCase() + f.slice(1)} — that's what I'm working toward with you, Merin 💗`,
-    (f: string) => `Everything I do is aimed at ${f} 💝`,
-    (f: string) => `I'd wait forever for ${f} because it'll be worth it 💖`,
-  ];
-  for (const dream of futureDreams) {
-    for (const tmpl of futureTemplates) {
-      reasons.push(tmpl(dream));
-    }
-  }
-
-  // Category 6: Random sweet details
-  const sweetDetails = [
-    "the name Merin is the most beautiful name I've ever heard",
-    "you exist and somehow found me",
-    "you make being loved feel easy",
-    "you never try to be anyone other than yourself",
-    "even your flaws are things I adore",
-    "you love with your whole heart unguarded",
-    "you make me want to be a better version of myself",
-    "you're the first person I want to tell good news to",
-    "you're the first person I want when something goes wrong",
-    "you make silence feel comfortable",
-    "you think deeply about things and it shows",
-    "you're the kind of person who notices the small stuff",
-    "you carry so much and still show up fully",
-    "you have the most beautiful mind",
-    "you turn ordinary days into something worth remembering",
-    "you say my name and it sounds different than when anyone else does",
-    "you're not perfect and that makes you even more real to me",
-    "you're everything I didn't know I needed",
-    "you've already changed me in the best ways",
-    "you feel like the plot twist I always needed in my story",
-    "you love the parts of me I thought were too much",
-    "you're my favourite notification every single time",
-    "you're proof that the universe conspires to bring people together",
-    "you give me butterflies and peace at the same time",
-    "you make uncertainty feel like an adventure not a fear",
-    "you chose me too and that still amazes me",
-    "you make love feel uncomplicated",
-    "you remind me that good people really do exist",
-    "you're my safe harbour and my wildest dream all at once",
-    "you make everything better just by being you",
-  ];
-  const detailTemplates = [
-    (d: string) => `I love that ${d} 💖`,
-    (d: string) => `It's incredible that ${d} 🌸`,
-    (d: string) => `Something I treasure: ${d} 💕`,
-    (d: string) => `My heart is full because ${d} ✨`,
-    (d: string) =>
-      `${d[0].toUpperCase() + d.slice(1)} — and that's reason enough 💗`,
-    (d: string) => `I keep coming back to the fact that ${d} 💝`,
-    (d: string) => `Every day I'm grateful that ${d}, Merin 💖`,
-    (d: string) =>
-      `${d[0].toUpperCase() + d.slice(1)} and I could never stop being thankful`,
-  ];
-  for (const detail of sweetDetails) {
-    for (const tmpl of detailTemplates) {
-      reasons.push(tmpl(detail));
-    }
-  }
-
-  // Category 7: Not having met yet but already deeply in love
-  const notMetThings = [
-    "loving someone this deeply without touching them once proves love is beyond physical",
-    "we haven't met yet and I already know you're it for me",
-    "distance couldn't stop this love from blooming",
-    "I fell in love with your soul before I could hold your hand",
-    "every barrier between us only made this stronger",
-    "I know the shape of your laugh before I've heard it in person",
-    "you're a stranger to my hands but not to my heart",
-    "miles between us and still somehow I feel you close",
-    "not having met you yet makes every future moment feel like treasure",
-    "I loved you in pixels and I'll love you more in person",
-    "we built something real without a single shared room",
-    "one day 'haven't met yet' will become 'remember when we first met'",
-    "the waiting has only made my love for you more certain",
-    "I don't need to have held you to know how right this is",
-    "everything I know about you makes me love you more not less",
-    "the anticipation of meeting you is one of the most beautiful feelings",
-    "loving you long distance has taught me what love really is",
-    "every day without you is proof that I want every day with you",
-    "not meeting you yet is the plot before the best chapter",
-    "I already love you completely and meeting you will only deepen that",
-  ];
-  const notMetTemplates = [
-    (n: string) => `${n[0].toUpperCase() + n.slice(1)} 💖`,
-    (n: string) => `I think about how ${n} 🌸`,
-    (n: string) => `The truth is: ${n} 💕`,
-    (n: string) => `It means everything that ${n} ✨`,
-    (n: string) => `I hold onto the fact that ${n} 💗`,
-    (n: string) => `My heart knows: ${n} 💝`,
-    (n: string) => `One of my deepest truths is that ${n}, Merin 💖`,
-    (n: string) => `I believe with everything in me: ${n}`,
-  ];
-  for (const thing of notMetThings) {
-    for (const tmpl of notMetTemplates) {
-      reasons.push(tmpl(thing));
-    }
-  }
-
-  // Category 8: Extended fillers with varied sentence structures to fill to 5000
-  const fillerSubjects = [
-    "your voice",
-    "your mind",
-    "your heart",
-    "your laugh",
-    "your soul",
-    "your kindness",
-    "your warmth",
-    "your smile",
-    "your energy",
-    "your presence",
-    "your humour",
-    "your honesty",
-    "your depth",
-    "your gentleness",
-    "your love",
-    "your patience",
-    "your passion",
-    "your spirit",
-    "your light",
-    "your care",
-  ];
-  const fillerPredicates = [
-    "is everything I ever wanted",
-    "heals parts of me I didn't know were broken",
-    "makes me believe in fate",
-    "feels like sunlight on a cloudy day",
-    "is something I want to hold onto forever",
-    "makes every day brighter",
-    "is the first thing I think about in the morning",
-    "gives me reasons to look forward to tomorrow",
-    "is something no one else could ever replicate",
-    "makes me certain this is real",
-    "is woven into all my favourite moments now",
-    "changed my world completely",
-    "is a gift I never saw coming",
-    "leaves me breathless every single time",
-    "is my favourite thing in the universe",
-    "grounds me and lifts me up at once",
-    "is the reason I believe in beautiful things",
-    "makes the distance feel like nothing",
-    "is the answer to every question I ever had about love",
-    "fills every quiet moment with something warm",
-    "makes me feel lucky in a way I can't explain",
-    "is something I'd choose over and over again",
-    "has become my favourite thing about being alive",
-    "makes me want to write pages and pages and never stop",
-    "is what I didn't know I was waiting for",
-  ];
-  for (const subject of fillerSubjects) {
-    for (const predicate of fillerPredicates) {
-      reasons.push(
-        `${subject[0].toUpperCase() + subject.slice(1)} ${predicate} 💖`,
-      );
-      reasons.push(`I love that ${subject} ${predicate} 💕`);
-      reasons.push(`Merin, ${subject} ${predicate} — and I mean every word 🌸`);
-    }
-  }
-
-  // Category 9: More specific sweet observations
-  const sweetObservations = [
-    "I love how you've never made me feel like a burden",
-    "I love that you take my feelings seriously",
-    "I love how you dream big and actually chase those dreams",
-    "I love the way your enthusiasm is completely contagious",
-    "I love that you're emotionally intelligent in a way that's rare",
-    "I love how you handle hard conversations with grace",
-    "I love that you never try to change who I am",
-    "I love how you celebrate me on days I can't celebrate myself",
-    "I love that you tell me things you don't tell anyone else",
-    "I love the trust that has grown between us",
-    "I love how you make me feel beautiful even through a screen",
-    "I love the way you listen — really listen — when I speak",
-    "I love how safe I feel being vulnerable with you",
-    "I love that you show up consistently in little ways",
-    "I love how you find joy in the simplest things",
-    "I love the way your happiness becomes my happiness",
-    "I love how we can talk about anything and everything",
-    "I love that you apologise genuinely when you need to",
-    "I love how thoughtful your words always are",
-    "I love the way you hold space for me without judgment",
-    "I love that you make me feel less alone in this world",
-    "I love how you always find a way to make me laugh when I'm sad",
-    "I love that you care about the things that matter to me",
-    "I love how you love the people in your life so fiercely",
-    "I love that you chose to let me in",
-    "I love the way you make ordinary Tuesday evenings something to look forward to",
-    "I love that I know your favourite things and they make me think of you always",
-    "I love how you're growing and I get to witness it",
-    "I love that your heart is so open despite everything",
-    "I love how you make love look effortless",
-  ];
-  reasons.push(...sweetObservations);
-
-  // Category 10: Top-up reasons to reach exactly 5000
-  const topUpBase = [
-    "the way your name alone makes me smile",
-    "how choosing you feels like the easiest thing I've ever done",
-    "that I get to love you, Merin — of all the people in the world, you",
-    "how this love grew quietly and then all at once",
-    "that you are my favourite chapter so far",
-    "how loving you feels like finally speaking my mother tongue",
-    "that missing you means I have something worth missing",
-    "how every song hits differently since I found you",
-    "that you're the reason I believe in happy endings",
-    "how this started as a message and became my whole heart",
-    "that I would find you again in every lifetime",
-    "how being with you — even from afar — is my favourite place to be",
-    "that you are proof that love doesn't need geography",
-    "how you make tomorrow feel like something worth waiting for",
-    "that my heart knew before my head did",
-    "how quickly you became home to me",
-    "that I love you in the present and in every future tense",
-    "how you turned a wish I barely dared to have into something real",
-    "that every single day I love you a little more than the last",
-    "how you are, simply, my favourite person in the world",
-  ];
-  const topUpTemplates = [
-    (r: string) => `I love ${r} 💖`,
-    (r: string) => `Because ${r} 🌸`,
-    (r: string) => `I love you for ${r} 💕`,
-    (r: string) => `Reason: ${r} ✨`,
-    (r: string) => `My heart chose you because of ${r} 💗`,
-    (r: string) => `Simply: ${r} 💝`,
-    (r: string) => `Merin — ${r} 💖`,
-    (r: string) => `I can't stop thinking about ${r} 💕`,
-    (r: string) => `Every time I think of ${r} I smile 🌸`,
-    (r: string) => `${r[0].toUpperCase() + r.slice(1)} — this is love 💖`,
-  ];
-  for (const base of topUpBase) {
-    for (const tmpl of topUpTemplates) {
-      reasons.push(tmpl(base));
-    }
-  }
-
-  // Trim or pad to exactly 5000
-  while (reasons.length < 5000) {
-    const idx = reasons.length % topUpBase.length;
-    const tmplIdx =
-      Math.floor(reasons.length / topUpBase.length) % topUpTemplates.length;
-    reasons.push(`${topUpTemplates[tmplIdx](topUpBase[idx])} 💖`);
-  }
-
-  return reasons.slice(0, 5000);
-}
-
-const ALL_REASONS = generateReasons();
-const PAGE_SIZE = 50;
-
-// ── Components ────────────────────────────────────────────────────────────
-function SparkleParticle({
-  delay,
-  size,
-  x,
-  y,
-}: { delay: number; size: number; x: string; y: string }) {
+function BotanicalHero() {
   return (
-    <div
-      className="absolute pointer-events-none animate-sparkle"
-      style={
-        {
-          left: x,
-          top: y,
-          width: size,
-          height: size,
-          "--dur": `${2 + Math.random() * 2}s`,
-          "--delay": `${delay}s`,
-        } as React.CSSProperties
-      }
-    >
+    <header className="hero-section">
+      <div className="botanical-top">
+        <svg
+          viewBox="0 0 800 200"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <g stroke="#7a9e7e" strokeWidth="1.5" fill="none" opacity="0.7">
+            <path d="M0 180 Q80 120 160 100" />
+            <path d="M60 150 Q90 120 100 90" />
+            <path d="M100 130 Q130 100 145 70" />
+            <ellipse
+              cx="80"
+              cy="130"
+              rx="18"
+              ry="10"
+              transform="rotate(-30 80 130)"
+              fill="#7a9e7e"
+              opacity="0.4"
+            />
+            <ellipse
+              cx="110"
+              cy="110"
+              rx="15"
+              ry="8"
+              transform="rotate(-50 110 110)"
+              fill="#7a9e7e"
+              opacity="0.4"
+            />
+            <ellipse
+              cx="140"
+              cy="90"
+              rx="12"
+              ry="7"
+              transform="rotate(-70 140 90)"
+              fill="#7a9e7e"
+              opacity="0.35"
+            />
+            <ellipse
+              cx="50"
+              cy="155"
+              rx="14"
+              ry="8"
+              transform="rotate(-20 50 155)"
+              fill="#7a9e7e"
+              opacity="0.35"
+            />
+          </g>
+          <g
+            stroke="#7a9e7e"
+            strokeWidth="1.5"
+            fill="none"
+            opacity="0.7"
+            transform="translate(800,0) scale(-1,1)"
+          >
+            <path d="M0 180 Q80 120 160 100" />
+            <path d="M60 150 Q90 120 100 90" />
+            <path d="M100 130 Q130 100 145 70" />
+            <ellipse
+              cx="80"
+              cy="130"
+              rx="18"
+              ry="10"
+              transform="rotate(-30 80 130)"
+              fill="#7a9e7e"
+              opacity="0.4"
+            />
+            <ellipse
+              cx="110"
+              cy="110"
+              rx="15"
+              ry="8"
+              transform="rotate(-50 110 110)"
+              fill="#7a9e7e"
+              opacity="0.4"
+            />
+            <ellipse
+              cx="140"
+              cy="90"
+              rx="12"
+              ry="7"
+              transform="rotate(-70 140 90)"
+              fill="#7a9e7e"
+              opacity="0.35"
+            />
+            <ellipse
+              cx="50"
+              cy="155"
+              rx="14"
+              ry="8"
+              transform="rotate(-20 50 155)"
+              fill="#7a9e7e"
+              opacity="0.35"
+            />
+          </g>
+          <g transform="translate(400,160)" opacity="0.6">
+            <circle cx="0" cy="0" r="5" fill="#c9a84c" />
+            {FLORAL_ANGLES.map((angle) => (
+              <ellipse
+                key={angle}
+                cx={Math.cos((angle * Math.PI) / 180) * 14}
+                cy={Math.sin((angle * Math.PI) / 180) * 14}
+                rx="7"
+                ry="4"
+                transform={`rotate(${angle} ${Math.cos((angle * Math.PI) / 180) * 14} ${Math.sin((angle * Math.PI) / 180) * 14})`}
+                fill="#d4a0a0"
+                opacity="0.7"
+              />
+            ))}
+          </g>
+        </svg>
+      </div>
+
+      <div className="hero-content">
+        <p className="hero-by">by Sherry</p>
+        <h1 className="hero-title">
+          8,000 Reasons
+          <br />
+          <em>I Love You,</em>
+          <br />
+          Merin
+        </h1>
+        <p className="hero-subtitle">
+          Every single one is true. Every single one is not enough.
+        </p>
+      </div>
+
+      <div className="botanical-bottom">
+        <svg
+          viewBox="0 0 800 80"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <g stroke="#c4623a" strokeWidth="1" fill="none" opacity="0.25">
+            <path d="M200 80 Q300 40 400 50 Q500 60 600 20" />
+            <path d="M280 70 Q310 50 320 30" />
+            <path d="M480 60 Q510 40 520 20" />
+            <ellipse
+              cx="300"
+              cy="55"
+              rx="12"
+              ry="6"
+              transform="rotate(-40 300 55)"
+              fill="#c4623a"
+              opacity="0.3"
+            />
+            <ellipse
+              cx="500"
+              cy="45"
+              rx="10"
+              ry="5"
+              transform="rotate(-60 500 45)"
+              fill="#c4623a"
+              opacity="0.3"
+            />
+          </g>
+        </svg>
+      </div>
+    </header>
+  );
+}
+
+function Divider() {
+  return (
+    <div className="section-divider" aria-hidden="true">
       <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        className="w-full h-full"
-        aria-label="sparkle"
-        role="img"
+        viewBox="0 0 600 40"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
       >
-        <path
-          d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z"
-          fill="oklch(0.78 0.14 85 / 0.45)"
-        />
+        <g fill="none" stroke="#c4623a" strokeWidth="1" opacity="0.4">
+          <line x1="0" y1="20" x2="240" y2="20" />
+          <circle
+            cx="270"
+            cy="20"
+            r="4"
+            fill="#c9a84c"
+            stroke="none"
+            opacity="0.7"
+          />
+          <circle cx="300" cy="20" r="6" fill="none" stroke="#c4623a" />
+          <circle
+            cx="330"
+            cy="20"
+            r="4"
+            fill="#c9a84c"
+            stroke="none"
+            opacity="0.7"
+          />
+          <line x1="360" y1="20" x2="600" y2="20" />
+          <ellipse
+            cx="270"
+            cy="12"
+            rx="5"
+            ry="3"
+            fill="#7a9e7e"
+            opacity="0.5"
+            transform="rotate(-15 270 12)"
+          />
+          <ellipse
+            cx="330"
+            cy="12"
+            rx="5"
+            ry="3"
+            fill="#7a9e7e"
+            opacity="0.5"
+            transform="rotate(15 330 12)"
+          />
+        </g>
       </svg>
     </div>
   );
 }
 
-function FloatingHeartEl({
-  heart,
-  onDone,
-}: { heart: FloatingHeart; onDone: (id: number) => void }) {
+function ReasonCard({ text, index }: { text: string; index: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
   useEffect(() => {
-    const t = setTimeout(
-      () => onDone(heart.id),
-      (heart.dur + heart.delay) * 1000 + 200,
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" },
     );
-    return () => clearTimeout(t);
-  }, [heart, onDone]);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const cardStyles = [
+    "card-style-a",
+    "card-style-b",
+    "card-style-c",
+    "card-style-d",
+    "card-style-e",
+  ];
+  const style = cardStyles[index % cardStyles.length];
 
   return (
     <div
-      className="fixed pointer-events-none select-none animate-float-heart z-50"
-      style={
-        {
-          left: `${heart.x}%`,
-          bottom: "5%",
-          fontSize: `${heart.size}px`,
-          "--dur": `${heart.dur}s`,
-          "--delay": `${heart.delay}s`,
-          "--tx": `${heart.tx}px`,
-        } as React.CSSProperties
-      }
+      ref={ref}
+      className={`reason-card ${style} ${visible ? "reason-card--visible" : ""}`}
     >
-      {heart.emoji}
+      <span className="reason-number">{index + 1}</span>
+      <p className="reason-text">{text}</p>
     </div>
   );
 }
 
-// ── Reasons Section ────────────────────────────────────────────────────────
-function ReasonsSection({
-  sectionRef,
-}: { sectionRef: React.RefObject<HTMLElement | null> }) {
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-
-  const filtered = useMemo(() => {
-    if (!search.trim()) return ALL_REASONS;
-    const q = search.toLowerCase();
-    return ALL_REASONS.filter((r) => r.toLowerCase().includes(q));
-  }, [search]);
-
-  const visibleReasons = filtered.slice(0, page * PAGE_SIZE);
-  const hasMore = visibleReasons.length < filtered.length;
-
-  return (
-    <section
-      ref={sectionRef}
-      className="w-full py-20 px-4"
-      style={{
-        background:
-          "linear-gradient(180deg, oklch(0.09 0.03 265) 0%, oklch(0.13 0.05 275) 50%, oklch(0.10 0.03 260) 100%)",
-      }}
-      data-ocid="reasons5k.section"
-    >
-      <div className="max-w-3xl mx-auto">
-        {/* Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center mb-12"
-        >
-          <div className="text-5xl mb-4">💕</div>
-          <h2
-            className="font-script text-5xl md:text-7xl leading-tight mb-4"
-            style={{ color: "oklch(0.82 0.14 85)" }}
-          >
-            5,000 Reasons I Love You
-          </h2>
-          <p
-            className="font-body text-lg md:text-xl max-w-xl mx-auto"
-            style={{ color: "oklch(0.72 0.06 80)" }}
-          >
-            Even without meeting you, here are all the reasons my heart chose
-            you, Merin 💕
-          </p>
-        </motion.div>
-
-        {/* Search bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2, duration: 0.6 }}
-          className="mb-6 relative"
-        >
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg pointer-events-none">
-            🔍
-          </span>
-          <Input
-            type="text"
-            placeholder="Search reasons… (e.g. 'smile', 'late night', 'Merin')"
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setPage(1);
-            }}
-            className="pl-10 py-3 rounded-2xl font-body text-base shadow-sm"
-            style={{
-              background: "oklch(0.16 0.05 265)",
-              border: "1.5px solid oklch(0.30 0.08 265)",
-              color: "oklch(0.88 0.04 80)",
-            }}
-            data-ocid="reasons5k.search_input"
-          />
-        </motion.div>
-
-        {/* Counter */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-          className="font-body text-sm text-center mb-8"
-          style={{ color: "oklch(0.65 0.05 265)" }}
-          data-ocid="reasons5k.panel"
-        >
-          Showing <strong>{visibleReasons.length}</strong> of{" "}
-          <strong>{filtered.length.toLocaleString()}</strong> reasons
-          {search && ` matching "${search}"`}
-        </motion.p>
-
-        {/* Cards grid */}
-        <div className="space-y-3" data-ocid="reasons5k.list">
-          {visibleReasons.map((reason, idx) => {
-            const globalIdx = ALL_REASONS.indexOf(reason);
-            const num = (globalIdx !== -1 ? globalIdx : idx) + 1;
-            const isNew = idx >= (page - 1) * PAGE_SIZE;
-            return (
-              <motion.div
-                key={`reason-${num}`}
-                initial={isNew ? { opacity: 0, y: 16 } : false}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  delay: isNew ? (idx % PAGE_SIZE) * 0.012 : 0,
-                  duration: 0.4,
-                  ease: "easeOut",
-                }}
-                className="flex items-start gap-4 rounded-2xl px-5 py-4"
-                style={{
-                  background:
-                    idx % 3 === 0
-                      ? "oklch(0.16 0.05 265 / 0.90)"
-                      : idx % 3 === 1
-                        ? "oklch(0.18 0.06 275 / 0.90)"
-                        : "oklch(0.17 0.06 285 / 0.90)",
-                  boxShadow: "0 2px 12px oklch(0.10 0.04 265 / 0.60)",
-                  backdropFilter: "blur(8px)",
-                }}
-                data-ocid={`reasons5k.item.${Math.min(idx + 1, 3)}`}
-              >
-                <span
-                  className="font-display text-xs font-bold shrink-0 mt-0.5 px-2 py-0.5 rounded-full"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, oklch(0.72 0.16 85), oklch(0.65 0.14 70))",
-                    color: "white",
-                    minWidth: "42px",
-                    textAlign: "center",
-                  }}
-                >
-                  #{num}
-                </span>
-                <p
-                  className="font-body text-sm leading-relaxed"
-                  style={{ color: "oklch(0.88 0.04 80)" }}
-                >
-                  {reason}
-                </p>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* Empty state */}
-        {filtered.length === 0 && (
-          <div className="text-center py-16" data-ocid="reasons5k.empty_state">
-            <div className="text-5xl mb-4">🌸</div>
-            <p
-              className="font-body text-lg"
-              style={{ color: "oklch(0.65 0.05 265)" }}
-            >
-              No reasons found for "{search}" — but trust me, they all still
-              apply! 💖
-            </p>
-          </div>
-        )}
-
-        {/* Load more */}
-        {hasMore && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mt-10 text-center"
-          >
-            <button
-              type="button"
-              className="font-body font-semibold text-base text-white px-8 py-4 rounded-2xl shadow-lg transition-transform hover:scale-105 active:scale-95"
-              style={{
-                background:
-                  "linear-gradient(135deg, oklch(0.72 0.16 85), oklch(0.78 0.13 65))",
-              }}
-              onClick={() => setPage((p) => p + 1)}
-              data-ocid="reasons5k.button"
-            >
-              Load More Reasons 💕
-            </button>
-            <p
-              className="font-body text-xs mt-3"
-              style={{ color: "oklch(0.65 0.05 265)" }}
-            >
-              {filtered.length - visibleReasons.length} more to explore
-            </p>
-          </motion.div>
-        )}
-
-        {/* All shown message */}
-        {!hasMore && filtered.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="mt-10 text-center py-8 rounded-3xl"
-            style={{ background: "oklch(0.15 0.05 265 / 0.80)" }}
-            data-ocid="reasons5k.success_state"
-          >
-            <div className="text-4xl mb-3">💖</div>
-            <p
-              className="font-script text-2xl"
-              style={{ color: "oklch(0.82 0.14 85)" }}
-            >
-              {search
-                ? `All ${filtered.length} matching reasons ✨`
-                : "All 5,000 reasons — every single one true 💕"}
-            </p>
-            <p
-              className="font-body text-sm mt-2"
-              style={{ color: "oklch(0.65 0.05 265)" }}
-            >
-              I love you, Merin. Always. 🌸
-            </p>
-          </motion.div>
-        )}
-      </div>
-    </section>
-  );
-}
-
-// ── Main App ──────────────────────────────────────────────────────────────
 export default function App() {
-  const [hearts, setHearts] = useState<FloatingHeart[]>([]);
-  const [loveIdx, setLoveIdx] = useState(-1);
-  const [reasonIdx, setReasonIdx] = useState(-1);
-  const [songClicked, setSongClicked] = useState(false);
-  const [heartCount, setHeartCount] = useState(0);
-  const [bigHeartAnim, setBigHeartAnim] = useState(false);
-  const heartIdRef = useRef(0);
-  const reasonsSectionRef = useRef<HTMLElement | null>(null);
+  const [visibleCount, setVisibleCount] = useState(INITIAL_BATCH);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
-  // background sparkles — stable reference
-  const sparkles = useRef(
-    Array.from({ length: 18 }, (_, i) => ({
-      id: i,
-      delay: i * 0.3,
-      size: 8 + (i % 3) * 6,
-      x: `${(i * 37 + 5) % 95}%`,
-      y: `${(i * 53 + 10) % 88}%`,
-    })),
-  ).current;
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
 
-  const spawnHearts = useCallback((count = 6) => {
-    const newHearts: FloatingHeart[] = Array.from({ length: count }, (_, i) => {
-      heartIdRef.current += 1;
-      return {
-        id: Date.now() + i + heartIdRef.current,
-        x: 10 + Math.random() * 80,
-        size: 24 + Math.random() * 24,
-        dur: 5 + Math.random() * 3,
-        delay: i * 0.15,
-        tx: (Math.random() - 0.5) * 120,
-        emoji: HEART_EMOJIS[Math.floor(Math.random() * HEART_EMOJIS.length)],
-      };
-    });
-    setHearts((prev) => [...prev, ...newHearts]);
-    setHeartCount((c) => c + count);
-  }, []);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && visibleCount < reasons.length) {
+          setVisibleCount((prev) =>
+            Math.min(prev + BATCH_SIZE, reasons.length),
+          );
+        }
+      },
+      { rootMargin: "400px" },
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [visibleCount]);
 
-  const removeHeart = useCallback((id: number) => {
-    setHearts((prev) => prev.filter((h) => h.id !== id));
-  }, []);
-
-  const handleLoveClick = () => {
-    setLoveIdx((i) => (i + 1) % LOVE_ANSWERS.length);
-    spawnHearts(3);
-    setBigHeartAnim(true);
-    setTimeout(() => setBigHeartAnim(false), 700);
-  };
-
-  const handleReasonClick = () => {
-    setReasonIdx((i) => (i + 1) % LOVE_REASONS.length);
-    spawnHearts(2);
-  };
-
-  const handleSongClick = () => {
-    setSongClicked(true);
-    spawnHearts(8);
-  };
-
-  const handleSendHeart = () => {
-    spawnHearts(10);
-  };
-
-  const scrollToReasons = () => {
-    reasonsSectionRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  };
+  const visibleReasons = reasons.slice(0, visibleCount);
 
   return (
-    <div
-      className="min-h-screen sparkle-bg"
-      style={{
-        background:
-          "linear-gradient(135deg, oklch(0.08 0.03 265) 0%, oklch(0.12 0.05 275) 50%, oklch(0.09 0.04 260) 100%)",
-      }}
-    >
-      {/* Background sparkles */}
-      {sparkles.map((s) => (
-        <SparkleParticle
-          key={s.id}
-          delay={s.delay}
-          size={s.size}
-          x={s.x}
-          y={s.y}
-        />
-      ))}
+    <div className="app">
+      <BotanicalHero />
 
-      {/* Floating hearts portal */}
-      {hearts.map((h) => (
-        <FloatingHeartEl key={h.id} heart={h} onDone={removeHeart} />
-      ))}
+      <main className="main-content">
+        <Divider />
 
-      {/* ── Hero ──────────────────────────────────── */}
-      <header className="relative pt-16 pb-12 px-4 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: "easeOut" }}
+        <section
+          className="reasons-section"
+          aria-label="8000 reasons I love Merin"
         >
-          <div className="text-6xl mb-4 animate-bounce-heart inline-block">
-            💖
+          <div className="reasons-grid">
+            {visibleReasons.map((reason, i) => (
+              <ReasonCard key={reason} text={reason} index={i} />
+            ))}
           </div>
-          <h1
-            className="font-script text-6xl md:text-8xl leading-tight mb-3"
-            style={{ color: "oklch(0.88 0.12 80)" }}
-          >
-            I Love You,
-          </h1>
-          <h2 className="font-script text-7xl md:text-9xl leading-tight shimmer-text">
-            Merin
-          </h2>
-          <p
-            className="mt-5 font-body text-lg md:text-xl"
-            style={{ color: "oklch(0.75 0.06 80)" }}
-          >
-            A little something made just for you 🌸
-          </p>
 
-          {/* Scroll to 5000 reasons button */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.6 }}
-            className="mt-6"
-          >
-            <button
-              type="button"
-              onClick={scrollToReasons}
-              className="font-body font-semibold text-base text-white px-8 py-3 rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95 inline-flex items-center gap-2"
-              style={{
-                background:
-                  "linear-gradient(135deg, oklch(0.72 0.16 85), oklch(0.78 0.13 70))",
-                boxShadow: "0 4px 24px oklch(0.78 0.14 85 / 0.40)",
-              }}
-              data-ocid="hero.primary_button"
-            >
-              See 5,000 Reasons 💕
-            </button>
-          </motion.div>
-        </motion.div>
+          <div ref={sentinelRef} className="sentinel" aria-hidden="true" />
 
-        {/* Heart counter */}
-        {heartCount > 0 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="mt-4 inline-block"
-          >
-            <span
-              className="font-body text-sm px-4 py-2 rounded-full"
-              style={{
-                background: "oklch(0.78 0.14 85 / 0.15)",
-                color: "oklch(0.45 0.2 10)",
-              }}
-            >
-              💕 {heartCount} hearts sent to Merin!
-            </span>
-          </motion.div>
-        )}
-      </header>
+          {visibleCount < reasons.length && (
+            <div className="loading-indicator" aria-live="polite">
+              <span className="loading-dot" />
+              <span className="loading-dot" />
+              <span className="loading-dot" />
+            </div>
+          )}
+        </section>
 
-      {/* ── Main Content ────────────────────────── */}
-      <main className="max-w-2xl mx-auto px-4 pb-20 space-y-6">
-        {/* ── How much do I love you ── */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="rounded-3xl p-7 shadow-card"
-          style={{
-            background: "oklch(0.15 0.05 265 / 0.85)",
-            backdropFilter: "blur(12px)",
-          }}
-          data-ocid="love_amount.card"
-        >
-          <p
-            className="font-display text-sm uppercase tracking-widest mb-4"
-            style={{ color: "oklch(0.70 0.12 290)" }}
-          >
-            Ask me anything 💬
-          </p>
-          <button
-            type="button"
-            className="btn-love w-full py-4 px-6 rounded-2xl font-body font-semibold text-lg text-white shadow-love animate-pulse-glow"
-            style={{
-              background:
-                "linear-gradient(135deg, oklch(0.72 0.16 85), oklch(0.80 0.12 70))",
-            }}
-            onClick={handleLoveClick}
-            data-ocid="love_amount.button"
-          >
-            How much do I love you? 💕
-          </button>
-
-          <AnimatePresence mode="wait">
-            {loveIdx >= 0 && (
-              <motion.div
-                key={loveIdx}
-                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                transition={{ duration: 0.35 }}
-                className="mt-5 rounded-2xl py-5 px-6 text-center"
-                style={{ background: "oklch(0.18 0.06 280)" }}
-                data-ocid="love_amount.success_state"
-              >
-                <p
-                  className="font-display text-2xl font-bold"
-                  style={{ color: "oklch(0.82 0.14 85)" }}
-                >
-                  {LOVE_ANSWERS[loveIdx]}
-                </p>
-                <p
-                  className="text-xs mt-1"
-                  style={{ color: "oklch(0.60 0.05 265)" }}
-                >
-                  click again for more ↑
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.section>
-
-        {/* ── Send a Heart ── */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35 }}
-          className="rounded-3xl p-7 shadow-card"
-          style={{
-            background: "oklch(0.15 0.05 265 / 0.85)",
-            backdropFilter: "blur(12px)",
-          }}
-          data-ocid="send_heart.card"
-        >
-          <p
-            className="font-display text-sm uppercase tracking-widest mb-4"
-            style={{ color: "oklch(0.70 0.12 290)" }}
-          >
-            For you 💌
-          </p>
-          <button
-            type="button"
-            className="btn-love w-full py-4 px-6 rounded-2xl font-body font-semibold text-lg text-white shadow-glow"
-            style={{
-              background:
-                "linear-gradient(135deg, oklch(0.50 0.18 290), oklch(0.60 0.18 0))",
-            }}
-            onClick={handleSendHeart}
-            data-ocid="send_heart.button"
-          >
-            Send a Heart 💗
-          </button>
-          <p
-            className="text-center text-xs mt-3"
-            style={{ color: "oklch(0.60 0.05 265)" }}
-          >
-            Watch the hearts fly! 🎈
-          </p>
-        </motion.section>
-
-        {/* ── Reasons I love you ── */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="rounded-3xl p-7 shadow-card"
-          style={{
-            background: "oklch(0.15 0.05 265 / 0.85)",
-            backdropFilter: "blur(12px)",
-          }}
-          data-ocid="love_reason.card"
-        >
-          <p
-            className="font-display text-sm uppercase tracking-widest mb-4"
-            style={{ color: "oklch(0.70 0.12 290)" }}
-          >
-            Reasons 🌷
-          </p>
-          <button
-            type="button"
-            className="btn-love w-full py-4 px-6 rounded-2xl font-body font-semibold text-lg text-white"
-            style={{
-              background:
-                "linear-gradient(135deg, oklch(0.45 0.14 290), oklch(0.72 0.16 85))",
-            }}
-            onClick={handleReasonClick}
-            data-ocid="love_reason.button"
-          >
-            Reasons I love you 🌸
-          </button>
-
-          <AnimatePresence mode="wait">
-            {reasonIdx >= 0 && (
-              <motion.div
-                key={reasonIdx}
-                initial={{ opacity: 0, scale: 0.85 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.85 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="mt-5 rounded-2xl py-5 px-6 text-center"
-                style={{ background: "oklch(0.18 0.06 280)" }}
-                data-ocid="love_reason.success_state"
-              >
-                <p
-                  className="font-body text-xl font-semibold"
-                  style={{ color: "oklch(0.88 0.08 80)" }}
-                >
-                  {LOVE_REASONS[reasonIdx]}
-                </p>
-                <p
-                  className="text-xs mt-1"
-                  style={{ color: "oklch(0.60 0.08 290)" }}
-                >
-                  click for more reasons ↑
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.section>
-
-        {/* ── Our Song ── */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.65 }}
-          className="rounded-3xl p-7 shadow-card"
-          style={{
-            background: "oklch(0.15 0.05 265 / 0.85)",
-            backdropFilter: "blur(12px)",
-          }}
-          data-ocid="our_song.card"
-        >
-          <p
-            className="font-display text-sm uppercase tracking-widest mb-4"
-            style={{ color: "oklch(0.70 0.12 290)" }}
-          >
-            Feel the music 🎵
-          </p>
-          <button
-            type="button"
-            className="btn-love w-full py-4 px-6 rounded-2xl font-body font-semibold text-lg text-white"
-            style={{
-              background: songClicked
-                ? "linear-gradient(135deg, oklch(0.72 0.16 85), oklch(0.80 0.12 70))"
-                : "linear-gradient(135deg, oklch(0.55 0.18 0), oklch(0.45 0.14 320))",
-            }}
-            onClick={handleSongClick}
-            data-ocid="our_song.button"
-          >
-            🎵 Play Our Song
-          </button>
-
-          <AnimatePresence>
-            {songClicked && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="mt-5 rounded-2xl py-5 px-6 text-center overflow-hidden"
-                style={{ background: "oklch(0.18 0.06 280)" }}
-                data-ocid="our_song.success_state"
-              >
-                <div className="text-3xl mb-2">🎶</div>
-                <p
-                  className="font-script text-2xl"
-                  style={{ color: "oklch(0.82 0.14 85)" }}
-                >
-                  Every song reminds me of you
-                </p>
-                <p
-                  className="font-body text-sm mt-2"
-                  style={{ color: "oklch(0.65 0.05 265)" }}
-                >
-                  You&apos;re the melody I never want to stop hearing 💕
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.section>
-
-        {/* ── Big heart button ── */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.8, type: "spring", stiffness: 200 }}
-          className="text-center py-4"
-        >
-          <button
-            type="button"
-            className="btn-love inline-flex flex-col items-center gap-1 cursor-pointer bg-transparent border-none p-4"
-            onClick={() => {
-              spawnHearts(15);
-              setBigHeartAnim(true);
-              setTimeout(() => setBigHeartAnim(false), 700);
-            }}
-            aria-label="Big love button"
-            data-ocid="big_heart.button"
-          >
-            <motion.span
-              animate={
-                bigHeartAnim
-                  ? { scale: [1, 1.5, 1], rotate: [0, -10, 10, 0] }
-                  : {}
-              }
-              transition={{ duration: 0.5 }}
-              className="text-7xl block"
-            >
-              ❤️
-            </motion.span>
-            <span
-              className="font-body text-sm"
-              style={{ color: "oklch(0.70 0.10 80)" }}
-            >
-              tap me!
-            </span>
-          </button>
-        </motion.div>
-
-        {/* ── Love Letter card ── */}
-        <motion.section
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.95 }}
-          className="rounded-3xl p-8 shadow-love text-center"
-          style={{
-            background:
-              "linear-gradient(135deg, oklch(0.22 0.08 265), oklch(0.30 0.12 290), oklch(0.78 0.14 85 / 0.3))",
-          }}
-          data-ocid="love_letter.card"
-        >
-          <div className="text-5xl mb-5">💌</div>
-          <h3 className="font-script text-4xl mb-4 text-white">
-            My Dearest Merin,
-          </h3>
-          <p className="font-body text-white/90 text-base leading-relaxed mb-4">
-            Every single day with you is a gift I never want to unwrap too
-            quickly. You make the ordinary feel extraordinary just by being in
-            it. I cherish your laugh, your warmth, and the way you see the
-            world.
-          </p>
-          <p className="font-body text-white/90 text-base leading-relaxed mb-6">
-            I love you — not just today, but every day that comes after. You are
-            my favourite person, always.
-          </p>
-          <p className="font-script text-2xl text-white/95">
-            Forever yours, Sherry 💖
-          </p>
-        </motion.section>
+        <Divider />
       </main>
 
-      {/* ── 5000 Reasons Section ─────────────────── */}
-      <ReasonsSection sectionRef={reasonsSectionRef} />
-
-      {/* ── Footer ── */}
-      <footer className="py-6 text-center">
-        <p
-          className="font-body text-sm"
-          style={{ color: "oklch(0.65 0.05 265)" }}
-        >
-          Made with ❤️ by Sherry · {new Date().getFullYear()} ·{" "}
+      <footer className="site-footer">
+        <div className="footer-botanical" aria-hidden="true">
+          <svg
+            viewBox="0 0 400 60"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <g fill="#7a9e7e" opacity="0.4">
+              <ellipse
+                cx="180"
+                cy="40"
+                rx="20"
+                ry="10"
+                transform="rotate(-30 180 40)"
+              />
+              <ellipse
+                cx="210"
+                cy="30"
+                rx="16"
+                ry="8"
+                transform="rotate(-50 210 30)"
+              />
+              <ellipse
+                cx="230"
+                cy="45"
+                rx="14"
+                ry="7"
+                transform="rotate(20 230 45)"
+              />
+            </g>
+            <g fill="#d4a0a0" opacity="0.5">
+              <circle cx="200" cy="20" r="4" />
+              <circle cx="215" cy="15" r="3" />
+              <circle cx="190" cy="18" r="3" />
+            </g>
+          </svg>
+        </div>
+        <p className="footer-closing">
+          And even 8,000 reasons isn&apos;t enough...
+        </p>
+        <p className="footer-love">With all of me, always — Sherry ♡</p>
+        <p className="footer-credit">
+          © {new Date().getFullYear()}. Built with love using{" "}
           <a
             href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
-            className="underline underline-offset-2 hover:opacity-80 transition-opacity"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Built with caffeine.ai
+            caffeine.ai
           </a>
         </p>
       </footer>
