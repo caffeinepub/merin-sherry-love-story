@@ -1,0 +1,267 @@
+// Reasons 5001–7500: How You Love Me + Our Moments & Memories
+
+const howYouLoveMe = [
+  "You love me with patience I didn't know I needed.",
+  "You love me without asking me to be different.",
+  "You love me in a way that makes me want to be my best self.",
+  "You love me like I'm worth the effort, always.",
+  "You love me loudly in private and steadily in public.",
+  "You love me through the hard parts without pulling away.",
+  "You love me specifically, not as a category or a placeholder.",
+  "You love me in the way you listen — completely.",
+  "You love me in the way you show up — consistently.",
+  "You love me in the way you speak — carefully.",
+  "You love me in the way you stay — willingly.",
+  "You love me in the way you care — thoroughly.",
+  "You love me in the way you grow — intentionally.",
+  "You love me in the way you check in — genuinely.",
+  "You love me in the way you hold space — generously.",
+  "You love me without making me earn it.",
+  "You love me without keeping a ledger.",
+  "You love me without a conditional clause.",
+  "You love me without requiring me to justify my feelings.",
+  "You love me without needing me to perform.",
+  "You love me with your attention, which is a luxury.",
+  "You love me with your honesty, which is a gift.",
+  "You love me with your humor, which makes the hard parts bearable.",
+  "You love me with your tenderness, which heals things I didn't know were broken.",
+  "You love me with your presence, which is the most comforting thing in my world.",
+  "You love me with your time, which is the most valuable thing you can give.",
+  "You love me with your care, which is shown in a hundred tiny ways.",
+  "You love me with your loyalty, which I have come to rely on.",
+  "You love me with your patience, which I am grateful for more than I show.",
+  "You love me with your whole self, and that is not a small thing.",
+  "Your love feels like being understood at a cellular level.",
+  "Your love feels like rest after a long day.",
+  "Your love feels like the answer to a question I've always had.",
+  "Your love feels like safety that travels with me.",
+  "Your love feels like warmth that doesn't run out.",
+  "Your love feels like the most honest thing I've ever received.",
+  "Your love feels like something I would fight to keep.",
+  "Your love feels like everything I needed before I knew it existed.",
+  "Your love feels like home at every coordinate.",
+  "Your love, Merin, is one of the defining facts of my life.",
+  "The way you love me makes me believe in the whole idea of love.",
+  "The way you love me makes ordinary days feel extraordinary.",
+  "The way you love me makes every difficult thing more bearable.",
+  "The way you love me makes me understand what I was waiting for.",
+  "The way you love me makes me want to love you better.",
+  "The way you love me makes me feel irreplaceable.",
+  "The way you love me is something I will always be grateful for.",
+  "The way you love me, quietly and completely, is everything.",
+  "The way you love me, with patience and warmth, is something I won't forget.",
+  "The way you love me, Merin, is the best thing that's ever been directed at me.",
+];
+
+const lovingStarters = [
+  "You love me by",
+  "You show your love through",
+  "Your love shows up in",
+  "You express love through",
+  "I feel your love when you",
+  "Your love is in the way you",
+  "I know you love me because you",
+  "Your love arrives as",
+  "Every time you love me, it looks like",
+  "You prove you love me by",
+];
+
+const lovingActions = [
+  "remembering the things I care about.",
+  "checking in without being asked.",
+  "holding space for me when I'm struggling.",
+  "saying the honest thing, even when it's hard.",
+  "showing up, consistently and without fanfare.",
+  "making me laugh when I'm too serious.",
+  "making me feel serious when I've been deflecting.",
+  "taking my worries seriously instead of dismissing them.",
+  "being patient when I need more time.",
+  "being honest when I need more truth.",
+  "being gentle when I need more softness.",
+  "being steady when I need more ground.",
+  "being present, even when presence is the hard thing.",
+  "listening like what I'm saying matters.",
+  "asking follow-up questions because you want to understand.",
+  "staying when staying is the braver thing to do.",
+  "choosing me in the small ways that add up to everything.",
+  "treating me like I am worth taking care of.",
+  "making me feel like loving me is something you'd choose again.",
+  "loving me, Merin, in all the ways I needed most.",
+  "noticing when something is wrong before I say it.",
+  "making space for all of me, not just the easy parts.",
+  "growing alongside me without it feeling like a competition.",
+  "loving me in my least lovable moments.",
+  "staying curious about who I'm becoming.",
+  "making me feel like the best version of myself is possible.",
+  "treating my feelings as valid, always.",
+  "showing up in ways that require no announcement.",
+  "loving the things I'm insecure about.",
+  "making love feel sustainable rather than exhausting.",
+];
+
+const momentsAndMemories = [
+  "The day I realized I was falling for you.",
+  "Every early conversation that made me want more of you.",
+  "The first time you made me laugh so hard I couldn't breathe.",
+  "The first time I felt completely safe being honest with you.",
+  "The feeling of our first real connection.",
+  "Every time you said exactly what I needed to hear.",
+  "The late nights talking about everything and nothing.",
+  "The first time I understood what missing someone really meant.",
+  "Every message that made me smile before I finished reading it.",
+  "The moment I stopped wondering if you were the right one.",
+  "Every time a day got better because of something you said.",
+  "The feeling of knowing you were thinking about me.",
+  "Every time I picked up the phone and felt the day shift.",
+  "The first time you said something that showed me how deeply you pay attention.",
+  "Every small moment that quietly added up to certainty.",
+  "The way getting to know you felt like finding something I'd lost.",
+  "Every good morning that made the day start better.",
+  "The first time I thought: this is the person I want.",
+  "Every conversation that ended too soon.",
+  "Every moment that made me think: I'm so glad I know this person.",
+  "The feeling of knowing there is a Merin in the world who chose me.",
+  "Every time something hard became easier because of you.",
+  "The first time I felt proud to be yours.",
+  "Every moment you reminded me what I deserve.",
+  "The feeling of being loved by someone like you.",
+  "Every time we stayed on a call longer than either of us planned.",
+  "The first time I realized you made me want to be a better person.",
+  "Every time a difficult day ended well because of something you said.",
+  "The way knowing you has changed me, quietly and permanently.",
+  "Every moment that I will keep as a private treasure.",
+  "Our first date, which I replay more than you know.",
+  "The car drive where I talked too much and you listened like it was music.",
+  "Walking into the mall and holding your arm for the first time.",
+  "The escape room and how we figured it out together.",
+  "Holding your hand the whole time at the food court.",
+  "The drinks we shared and how the conversation never ran out.",
+  "The drive home and how I didn't want it to end.",
+  "Hugging you near the college and not wanting to let go.",
+  "The kiss on your cheek, my first brave thing.",
+  "The entire day of March 25th, my birthday and the best one.",
+  "The way the whole day with you felt like a scene I want to replay forever.",
+  "How you fit beside me on March 25th like you'd always been there.",
+  "The way the world felt different after spending that first real day with you.",
+  "How your hand felt in mine at the food court.",
+  "How the car felt on the way home, full of something I didn't have a word for.",
+  "The moment you dropped me off and I didn't want to go inside.",
+  "Every text after our first date that made me smile for an hour.",
+  "The moment the date became a memory I knew I'd keep.",
+  "March 25th, 2026, the birthday I'll never forget.",
+  "All of the ordinary moments with you that turned out to be the best ones.",
+];
+
+const reasons3Raw: string[] = [];
+
+reasons3Raw.push(...howYouLoveMe);
+reasons3Raw.push(...momentsAndMemories);
+
+// 10 × 30 = 300
+for (const s of lovingStarters) {
+  for (const a of lovingActions) {
+    reasons3Raw.push(`${s} ${a}`);
+  }
+}
+
+// More love-style reasons
+const lovePhraseStarters = [
+  "Being loved by you means",
+  "Having you love me is",
+  "Your love has taught me",
+  "Because of the way you love me, I now know",
+  "Your love has shown me",
+  "Your love has given me",
+  "The gift of your love is",
+  "What your love has done for me is",
+  "The thing about being loved by you is",
+  "What it means to be loved by Merin is",
+  "Your love reminds me",
+  "Your love has changed",
+  "Because you love me the way you do",
+  "Having your love means",
+  "Your love, Merin, has given me",
+];
+
+const lovePhraseEndings = [
+  "knowing that safety is real.",
+  "understanding that love doesn't have to be earned.",
+  "feeling like I am enough, exactly as I am.",
+  "knowing that someone chooses me every day.",
+  "feeling worthy of being taken care of.",
+  "understanding what it feels like to be truly seen.",
+  "knowing that consistency in love is possible.",
+  "feeling like the world is a fundamentally good place.",
+  "understanding that patience is a form of love.",
+  "knowing that care can be unconditional.",
+  "feeling like the future is something to move toward.",
+  "understanding that belonging has a specific address.",
+  "knowing what it means to have someone in your corner.",
+  "feeling like being vulnerable is safe.",
+  "understanding that love can be both gentle and strong.",
+  "knowing that someone somewhere is thinking about me.",
+  "feeling like love is a daily choice you keep making.",
+  "understanding that being loved well changes you.",
+  "knowing that home is a person, not a place.",
+  "feeling, for the first time, completely at peace with where I am.",
+  "knowing how right it feels to love you back.",
+  "feeling like I found the answer before I understood the question.",
+  "understanding that love this good is worth every risk.",
+  "knowing that being chosen is one of the finest feelings there is.",
+  "feeling like the whole love thing finally makes sense.",
+  "knowing that I am loved by someone extraordinary.",
+  "feeling like everything I was waiting for arrived in the form of you.",
+  "understanding that love can be steady and exciting at the same time.",
+  "knowing that you, Merin, are the best thing.",
+  "feeling, bone-deep, that I am exactly where I am supposed to be.",
+];
+
+// 15 × 30 = 450
+for (const s of lovePhraseStarters) {
+  for (const e of lovePhraseEndings) {
+    reasons3Raw.push(`${s} ${e}`);
+  }
+}
+
+const moreMemory = [
+  "Every time you texted first.",
+  "Every call that went on past midnight.",
+  "Every time you made me laugh at something only we would find funny.",
+  "The way you remembered something I mentioned once.",
+  "Every time we talked about the future and it felt possible.",
+  "The first time I said your name out loud and it felt familiar.",
+  "Every good morning and goodnight that lived in my phone like small gifts.",
+  "The conversation where I understood I was already falling.",
+  "Every time being around you felt like coming up for air.",
+  "The moment I realized this was different from anything before.",
+  "Every inside joke that became ours.",
+  "The way time moves differently when I'm talking to you.",
+  "Every story you told me that I now carry as if it's mine.",
+  "The first time I caught myself smiling at my phone because of you.",
+  "Every time you said something that I kept thinking about for days.",
+  "The first time the future felt like it included us.",
+  "Every time you made me feel like I was exactly where I should be.",
+  "The way things between us moved from new to necessary so quickly.",
+  "Every time you turned something ordinary into a memory.",
+  "The feeling that something important began the day I met you.",
+  "The Hinge match that changed everything.",
+  "March 9th, 2026, the day we found each other.",
+  "The moment we started texting and the world got a little brighter.",
+  "When we shared our Instagrams and I knew something was shifting.",
+  "Deleting the app because this was already more than enough.",
+  "The first phone call and how your voice matched what I'd imagined.",
+  "The day you told me you had a crush on me.",
+  "March 13th, 2026, the day I said yes and everything got better.",
+  "Every day between March 13th and March 25th, building toward something.",
+  "Every message and call in those first weeks that I saved like treasure.",
+];
+
+reasons3Raw.push(...moreMemory);
+
+const seen3 = new Set<string>();
+for (const r of reasons3Raw) {
+  const trimmed = r.trim();
+  if (trimmed && !seen3.has(trimmed)) seen3.add(trimmed);
+}
+
+export const reasons3: string[] = Array.from(seen3).slice(0, 2500);

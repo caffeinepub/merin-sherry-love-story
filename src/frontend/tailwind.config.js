@@ -5,11 +5,6 @@ export default {
   theme: {
     extend: {
       colors: {
-        cream: "#faf6f0",
-        terracotta: "#c4623a",
-        sage: "#7a9e7e",
-        rose: "#d4a0a0",
-        gold: "#c9a84c",
         background: "oklch(var(--background) / <alpha-value>)",
         foreground: "oklch(var(--foreground) / <alpha-value>)",
         primary: {
@@ -38,8 +33,7 @@ export default {
       },
       fontFamily: {
         serif: ["Playfair Display", "Georgia", "serif"],
-        sans: ["Lato", "system-ui", "sans-serif"],
-        script: ["Dancing Script", "cursive"],
+        sans: ["DM Sans", "system-ui", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",

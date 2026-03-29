@@ -1,35 +1,31 @@
-# Merin & Sherry — 8000 Reasons
+# 10,000 Reasons I Love My Boyfriend
 
 ## Current State
-Existing project has a cinematic dark-navy midnight-themed site with 5,000 reasons I love Merin, search bar, pagination, and various romantic sections.
+No existing frontend files. Fresh build.
 
 ## Requested Changes (Diff)
 
 ### Add
-- 8,000 unique reasons organized into ~20 themed categories
-- New aesthetic: warm botanical editorial — cream/ivory background, terracotta/rust, sage green, dusty rose, modern serif + handwritten fonts. Completely different from the dark navy style.
-- Pure display layout — no interactive buttons anywhere (no search, no filters, no click actions)
-- Reasons laid out in a visually rich masonry/grid style with varied card sizes
-- Each reason uses unique vocabulary — no repeated keywords in adjacent cards or nearby rows
-- Decorative botanical/floral motifs via CSS (leaves, petals, botanical line-art using pure CSS/SVG)
-- Hero section with large title "8,000 Reasons I Love You, Merin" in warm editorial style
-- Smooth CSS scroll-reveal animations only (no JS click interactions)
-- Footer with a closing love note
+- Full-page website: "10,000 Reasons I Love My Boyfriend" (Merin)
+- New celestial/aurora aesthetic: deep midnight blue/purple gradient background, glowing aurora accents (green, pink, violet), gold star details
+- Large hero section with animated twinkling stars, elegant serif title, subtitle with Merin's name
+- Scrollable paginated list of 10,000 unique reasons, displayed as glowing frosted-glass cards
+- Each reason is distinct — no repeated keywords nearby, varied sentence structures, covering personality, looks, habits, love, moments
+- Infinite scroll or "Load More" pagination (100 per page)
+- Floating particle/star background animation
+- Optional search/filter bar
+- No interactive love buttons — display only
 
 ### Modify
-- Replace entire App.tsx with new aesthetic and 8,000 reasons
-- Replace index.css with new botanical color palette and typography
+- N/A
 
 ### Remove
-- All dark navy/midnight styling
-- Search bar and filter functionality
-- All interactive buttons
-- Previous 5,000 reasons data
+- N/A
 
 ## Implementation Plan
-1. Generate 8,000 reasons across 20 themed categories in a data file (reasons.ts)
-   - Categories: his voice, his care, his humor, his patience, distance/longing, his texts, his dreams, his kindness, his mind, his quirks, late night calls, the future, small things, his heart, trust, his support, his curiosity, his warmth, his loyalty, his everything
-   - Each reason is unique, no duplicate keywords adjacent to each other
-   - Shuffle reasons so categories interleave naturally
-2. Build App.tsx with masonry-style grid, scroll-reveal via Intersection Observer, no buttons
-3. Style with botanical editorial theme in index.css
+1. Generate 10,000 unique reasons in frontend data file (chunked across multiple arrays/categories)
+2. Build hero section with animated starfield
+3. Build reasons grid with frosted-glass cards and glow effects
+4. Implement pagination (100 per load)
+5. Add subtle scroll-triggered entrance animations per card
+6. Aurora gradient background with CSS animation
